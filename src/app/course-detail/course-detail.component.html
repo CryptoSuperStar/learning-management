@@ -1,0 +1,55 @@
+<div class="w-full px-5 py-10">
+  <p class="font-bold text-5xl text-slate-700">
+    Courses <span class="text-[#3EA4AF]">Accounting Fundamentals</span>
+  </p>
+  <div class="mt-10 w-full bg-white rounded-lg shadow-lg p-10">
+    <div class="flex flex-col gap-8">
+      <div class="flex flex-row gap-8">
+        <div class="flex flex-col w-1/2 gap-4 h-fit">
+          <p class="font-bold text-2xl text-slate-700">Course Name</p>
+          <input
+            class="w-full bg-[#F1F1F1] p-4 focus:border-0 outline-none"
+            value="{{ courseDetail.name }}"
+          />
+        </div>
+        <div class="flex flex-col w-1/2 gap-4 h-fit">
+          <p class="font-bold text-2xl text-slate-700">Course Status</p>
+          <select class="w-full bg-[#F1F1F1] p-4 focus:border-0 outline-none">
+            <option>{{ courseDetail.status }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex flex-row gap-8">
+        <div class="flex flex-col w-1/2 gap-4">
+          <p class="font-bold text-2xl text-slate-700">Course Card Image</p>
+          <div class="bg-[#F1F1F1] p-10">
+            <img src="{{ courseDetail.imageUrl }}" class="w-full" />
+          </div>
+        </div>
+        <div class="flex flex-col w-1/2 gap-4">
+          <p class="font-bold text-2xl text-slate-700">Instructor</p>
+          <!-- <select
+            multiple
+            class="w-full bg-[#F1F1F1] p-4 focus:border-transparent"
+          >
+            <option
+              *ngFor="let instructor of coursedetail.instructors"
+              value="instructor"
+            >
+              {{ instructor.name }}
+            </option>
+          </select> -->
+          <ng-multiselect-dropdown
+            class="outline-none border-0 w-full bg-[#F1F1F1] p-4 focus:border-0"
+            [settings]="dropdownSettings"
+            [data]="dropdownList"
+            [(ngModel)]="selectedItems"
+            (onSelect)="onItemSelect($event)"
+            (onSelectAll)="onSelectAll($event)"
+          >
+          </ng-multiselect-dropdown>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
