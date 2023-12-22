@@ -49,7 +49,7 @@ describe('CourseService', () => {
       expect(courses).toEqual(mockCourses);
     });
 
-    const req = httpMock.expectOne('http://localhost:3000/api/course_list');
+    const req = httpMock.expectOne('http://localhost:3000/api/course_list'); // http://localhost:3000/ = apiUrl
     expect(req.request.method).toBe('GET');
     req.flush(mockCourses);
   });

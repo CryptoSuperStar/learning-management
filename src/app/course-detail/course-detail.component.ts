@@ -1,67 +1,62 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CourseService } from './../course.service';
 import {
-  NgMultiSelectDropDownModule,
   IDropdownSettings,
+  NgMultiSelectDropDownModule,
 } from 'ng-multiselect-dropdown';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Instructor, Course } from './../course.service';
+import { Course } from '../models/course.model';
+import { Instructor } from '../models/instructor.model';
 
 @Component({
   selector: 'app-course-detail',
   standalone: true,
   imports: [NgMultiSelectDropDownModule, CommonModule, FormsModule],
   templateUrl: './course-detail.component.html',
-  styleUrl: './course-detail.component.css'
+  styleUrl: './course-detail.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CourseDetailComponent {
-  courseDetail: Course = {
-    id: 0,
-    name: '',
-    imageUrl: '',
-    status: '',
-    instructors: [],
-  };
+  private cdr = inject(ChangeDetectorRef);
+  courseDetail: Course = {} as Course;
 
   dropdownList: Instructor[] = [];
   selectedItems: Instructor[] = [];
-  dropdownSettings = {};
+  dropdownSettings: IDropdownSettings = {} as IDropdownSettings; //typed
 
   constructor(
     private CourseService: CourseService,
-    private router: Router,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id !== null) {
-      this.CourseService.getCourseDetail(id).subscribe((courseDetail) => {
-        this.courseDetail = courseDetail;
-        this.selectedItems = courseDetail.instructors;
-        this.dropdownList = courseDetail.instructors;
-        this.dropdownSettings = {
-          singleSelection: false,
-          idField: 'name',
-          textField: 'name',
-          selectAllText: 'Select All',
-          unSelectAllText: 'UnSelect All',
-          itemsShowLimit: 3,
-          allowSearchFilter: true
-        };
-        console.log(courseDetail.instructors);
-      });
-    } else {
+    if (id === null) {
       console.log('ID parameter is null');
+      return;
     }
-  }
 
-  onItemSelect(item: any) {
-    console.log(item);
-  }
-  onSelectAll(items: any) {
-    console.log(items);
+    this.CourseService.getCourseDetail(id).subscribe((courseDetail) => {
+      this.courseDetail = courseDetail;
+      this.selectedItems = courseDetail.instructors;
+      this.dropdownList = courseDetail.instructors;
+      this.dropdownSettings = {
+        singleSelection: false,
+        idField: 'name',
+        textField: 'name',
+        selectAllText: 'Select All',
+        unSelectAllText: 'UnSelect All',
+        itemsShowLimit: 3,
+        allowSearchFilter: true,
+      };
+      this.cdr.markForCheck();
+    });
   }
 }
