@@ -57,9 +57,9 @@ describe('CourseListComponent', () => {
     expect(component.filteredCourses[0].name).toContain('Course 1');
   });
   it('should filter courses based on status', () => {
-    component.selectedStatus = 'DRAFT';
-    component.filterCourses("DRAFT");
+    component.selectedStatus = 'PUBLISHED';
+    component.filterCourses("PUBLISHED");
     expect(component.filteredCourses.length).toBe(1);
-    expect(component.filteredCourses[0].name).toContain('Course 1');
+    expect(component.filteredCourses[0].name).toContain('Course 2');
   });
 });

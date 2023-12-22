@@ -1,3 +1,4 @@
+// why is it TS file without types ?
 import express from 'express';
 import cors from 'cors';
 import courseListRouter from './routes/courseList';

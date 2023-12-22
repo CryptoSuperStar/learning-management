@@ -1,27 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-
-export interface Instructor {
-  name: string;
-  image: string;
-}
-
-export interface Course {
-  id: number;
-  name: string;
-  imageUrl: string;
-  status: string;
-  instructors: Instructor[]
-}
+import { Course } from './models/course.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CourseService {
   private apiUrl = 'http://localhost:3000/api';
-
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
 
   getCourses(): Observable<Course[]> {
     return this.http.get<Course[]>(`${this.apiUrl}/course_list`);

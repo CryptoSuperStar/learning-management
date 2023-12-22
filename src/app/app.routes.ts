@@ -5,7 +5,7 @@ import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
   { path: '', component: CourseListComponent },
-  { path: 'course/:id', component: CourseDetailComponent },
+  { path: 'course/:id', component: CourseDetailComponent }, // no lazy load
 ];
 
 @NgModule({

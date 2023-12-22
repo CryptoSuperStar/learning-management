@@ -1,30 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { CourseService } from './../course.service';
-import type { Course } from '../course.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Course } from '../models/course.model';
 
 @Component({
   selector: 'app-course-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
+  imports: [CommonModule, FormsModule, NgOptimizedImage],
   templateUrl: './course-list.component.html',
-  styleUrl: './course-list.component.css'
+  styleUrl: './course-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CourseListComponent {
+  private cdr = inject(ChangeDetectorRef);
   courses: Course[] = [];
   selectedStatus: string = '';
   searchText: string = '';
   filteredCourses: Course[] = this.courses;
 
-  constructor(private CourseService: CourseService, private router: Router) {}
+  constructor(private courseService: CourseService, private router: Router) {}
 
   ngOnInit(): void {
-    this.CourseService.getCourses().subscribe((courses) => {
+    this.courseService.getCourses().subscribe((courses) => {
       this.courses = courses;
       this.filterCourses(null);
     });
@@ -34,23 +39,26 @@ export class CourseListComponent {
     this.router.navigate(['/course', id.toString()]);
   }
 
-  filterCourses(e: any): void {
-    this.selectedStatus = e;
-    this.filteredCourses = this.courses.filter(course => {
-      const matchesStatus = !this.selectedStatus || course.status === this.selectedStatus;
-      const matchesSearchText = !this.searchText || course.name.toLowerCase().includes(this.searchText.toLowerCase());
-
-      return matchesStatus && matchesSearchText;
-    })
+  filterCourses(e: string | null): void {
+    this.selectedStatus = e || '';
+    this.filterCallback();
   }
 
-  onInputChange(e: any): void {
+  onInputChange(e: string): void {
     this.searchText = e;
-    this.filteredCourses = this.courses.filter(course => {
-      const matchesStatus = !this.selectedStatus || course.status === this.selectedStatus;
-      const matchesSearchText = !this.searchText || course.name.toLowerCase().includes(this.searchText.toLowerCase());
+    this.filterCallback();
+  }
+
+  private filterCallback(): void {
+    this.filteredCourses = this.courses.filter((course) => {
+      const matchesStatus =
+        !this.selectedStatus || course.status === this.selectedStatus;
+      const matchesSearchText =
+        !this.searchText ||
+        course.name.toLowerCase().includes(this.searchText.toLowerCase());
 
       return matchesStatus && matchesSearchText;
-    })
+    });
+    this.cdr.markForCheck();
   }
 }
