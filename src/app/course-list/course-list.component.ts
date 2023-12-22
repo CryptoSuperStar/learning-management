@@ -26,10 +26,10 @@ export class CourseListComponent {
   searchText: string = '';
   filteredCourses: Course[] = this.courses;
 
-  constructor(private CourseService: CourseService, private router: Router) {}
+  constructor(private courseService: CourseService, private router: Router) {}
 
   ngOnInit(): void {
-    this.CourseService.getCourses().subscribe((courses) => {
+    this.courseService.getCourses().subscribe((courses) => {
       this.courses = courses;
       this.filterCourses(null);
     });

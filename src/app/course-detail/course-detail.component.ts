@@ -32,18 +32,18 @@ export class CourseDetailComponent {
   dropdownSettings: IDropdownSettings = {} as IDropdownSettings; //typed
 
   constructor(
-    private CourseService: CourseService,
+    private courseService: CourseService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
+    const id = this.route.snapshot.paramMap.get('id'); // in modern angular you dont need activated route to get :id
     if (id === null) {
       console.log('ID parameter is null');
       return;
     }
 
-    this.CourseService.getCourseDetail(id).subscribe((courseDetail) => {
+    this.courseService.getCourseDetail(id).subscribe((courseDetail) => {
       this.courseDetail = courseDetail;
       this.selectedItems = courseDetail.instructors;
       this.dropdownList = courseDetail.instructors;
